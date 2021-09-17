@@ -1,0 +1,204 @@
+#include<iostream>
+#include<stdlib.h>
+#include<time.h>
+#include <windows.h>
+#include <mmsystem.h>
+#include <stdio.h>
+#include <Windows.h>
+#include <ctime>
+#pragma comment (lib, "Winmm.lib")
+using namespace std;
+int gw = 0;
+void rastanovka1(char a[], int b) {
+    int m,n=b;
+    n /=2;
+    for (int y = 0; y < b; y++) {
+            a[y] = 0;
+    }
+    for (int y = 0; y < b; y++) {
+            if (a[y] == 0) {
+                do {
+                    a[y] = rand() % n + 65;
+                    for (int hj = y-1; hj >= 0; hj--) {
+                        if (a[hj] == a[y]) {
+                            a[y]=0;
+                        }
+                    }
+                }while(a[y]==0);
+                do {
+                    m = rand() % b;
+                } while (a[m] != 0);
+                a[m] = a[y];
+            }
+    }
+}
+void polegamer(char a[], int b) {
+    for (int y = 0; y < b; y++) {
+        a[y] = 31;
+    }
+}
+void ot1(char a[], int b) {
+    int kor = b;
+    kor = sqrt(kor);
+    for (int y = 0; y < b; y++) {
+        cout<< (y+1)<<" - " << a[y] << "\t";
+            if ((y+1) % kor == 0&&y!=0) {
+                cout << endl;
+             }
+    }cout << endl;
+}
+void ot2(char a[],char t[], int b,int c,int d) {
+    int kor = b;
+    kor = sqrt(kor);
+    for (int y = 0; y < b; y++) {
+        if (y == (c - 1) ) {
+            cout << c << " - " << t[c-1] << "\t";
+            if ((y + 1) % kor == 0 && y != 0) {
+                cout << endl;
+            }
+            continue;
+        }if(y == (d - 1)){
+            cout << d << " - " << t[d-1] << "\t";
+            if ((y + 1) % kor == 0 && y != 0) {
+                cout << endl;
+            }
+        }
+        else {
+            cout << (y + 1) << " - " << a[y] << "\t";
+            if ((y + 1) % kor == 0 && y != 0) {
+                cout << endl;
+            }
+        }
+    }cout << endl;
+}void ot3(char a[], char t[], int b, int c, int d) {
+    int kor = b;
+    kor = sqrt(kor);
+    for (int y = 0; y < b; y++) {
+        if (y == c - 1) {
+            if (a[y] != t[y]  ) { 
+                gw += 1;
+            }
+            cout << c << " - " << t[c - 1] << "\t";
+            a[y] = t[y];
+            if ((y + 1) % kor == 0 && y != 0) {
+                cout << endl;
+            }
+        }if (y == d - 1) {
+            cout << d << " - " << t[d - 1] << "\t";
+            a[y] = t[y];
+            if ((y + 1) % kor == 0 && y != 0) {
+                cout << endl;
+            }
+        }
+        else {
+            cout << (y + 1) << " - " << a[y] << "\t";
+            if ((y + 1) % kor == 0 && y != 0) {
+                cout << endl;
+            }
+        }
+    }cout << endl;
+}
+void game(char a[], char b[], int c) {
+    int start_time = clock();
+    int kart1,kart2, check=0;
+    while (gw < c/2) {
+        ot1(b, c);
+        ot1(a, c);
+        cout << "Введите номера двух карт которые хотите открыть!\n";
+        cin >> kart1 >> kart2;
+        while(kart1<=0 || kart1 >c|| kart2<=0 || kart2 >c){
+            cout << "Введённое вами значение не соответствует ни одному из показаных вам карт, введите ещё раз!\n";
+            cin >> kart1 >> kart2;
+        }
+        while (kart1 == kart2) {
+            cout << "Вы указали одну и туже карту, введите ещё раз!\n";
+            cin >> kart1 >> kart2;
+        }
+        if (b[kart1 - 1] != b[kart2 - 1]) {
+            system("cls");
+            PlaySoundA("C:\\Users\\pozdnich\\Desktop\\игра Память\\звук\\Не правельно.wav", NULL, 1);
+            ot2(a, b, c, kart1, kart2);
+            check += 1;
+            cout << "Не правельно, попробуйте снова!\n";
+            Sleep(2000);
+            system("cls");
+        }if (b[kart1 - 1] == b[kart2 - 1]) {
+            system("cls");
+            PlaySoundA("C:\\Users\\pozdnich\\Desktop\\игра Память\\звук\\Правельно.wav", NULL, 1);
+            ot3(a, b, c, kart1, kart2);
+            check += 1;
+            cout << "Правельно, продолжайте в том жэ духе!\n";
+            system("cls");
+        }
+    }
+    cout << "\tСТАТИСТИКА\n";
+    cout << "Количество переворотов карт: " << check << endl;
+    int end_time = clock();
+    int search_time = end_time - start_time;
+    cout << "Время игры: ";
+    if (search_time / 1000 < 60) {
+        cout << search_time / 1000 << " сек.\n";
+    }if (search_time / 1000 > 60 && search_time / 1000 < 3600) {
+        cout << (search_time / 1000) / 60 << " мин. " << (search_time / 1000) % 60 << " сек.\n";
+    }if (search_time / 1000 > 3600) {
+        cout << search_time / 1000 / 3600 << " ч. " << (search_time / 1000 / 3600) % 60 << " мин. " << ((search_time / 1000 / 3600) % 60) % 60 << " сек.\n";
+    }
+}
+int main() {
+    setlocale(LC_ALL, "RUSSIAN");
+    srand(time(NULL));
+    const int one = 16,two=36, three=64;
+    char onepol[one], twopol[two], threepol[three];
+    const int onen = 16, twon = 36, threen = 64;
+    char onepoln[onen], twopoln[twon], threepoln[threen];
+    int four;
+    char* fourpol;
+    char* fourpoln;
+    cout << "Приветствую в игре ПАМЯТЬ =)\n";
+    cout << "Начнём с выбора поля!(Выберите одно из перечисленых)\n";
+    cout << "1 - 4х4\n";
+    cout << "2 - 6х6\n";
+    cout << "3 - 8х8\n";
+    cout << "4 - вы сами вводите диапозон поля от 4 карт до 100(учитывайте что количество должно быть чётным!)\n";
+    int g;
+    do{
+        cin >> g;
+    } while (g < 1 || g>4);
+    switch (g)
+    {
+    case 1:
+        system("cls");
+        rastanovka1(onepol, one);
+        polegamer(onepoln, onen);
+        game(onepoln, onepol, one);
+        break;
+    case 2:
+        system("cls");
+        rastanovka1(twopol, two);
+        polegamer(twopoln, twon);
+        game(twopoln, twopol, two);
+        break;
+    case 3:
+        system("cls");
+        rastanovka1(threepol, three);
+        polegamer(threepoln, threen);
+        game(threepoln, threepol, three);
+        break;
+    case 4:
+        system("cls");
+        cout << "Введите диапозон поля(учитывайте что количество должно быть чётным и выбор есть от 4 до 100!)\n";
+        cin >> four;
+        while (four < 4 || four>100|| four%2!=0) {
+            cout << "Вы вышли за предел возможного диапозона или ввели не чётное число!\nВведите ещё раз!\n";
+            cin >> four;
+        }
+        fourpol = new char[four];
+        fourpoln = new char[four];
+        rastanovka1(fourpol, four);
+        polegamer(fourpoln, four);
+        game(fourpoln, fourpol, four);
+        delete fourpol;
+        delete fourpoln;
+        break;
+    }
+}
